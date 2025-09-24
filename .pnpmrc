@@ -1,0 +1,3 @@
+# pnpm workspace configuration (migrated from .npmrc)
+enable-pre-post-scripts=true
+prefer-workspace-packages=true

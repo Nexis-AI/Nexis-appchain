@@ -14,7 +14,9 @@
     "build": "forge build",
     "build:go-ffi": "(cd scripts/go-ffi && go build)",
     "autogen:invariant-docs": "npx tsx scripts/autogen/generate-invariant-docs.ts",
-    "test": "pnpm build:go-ffi && forge test",
+    "test": "pnpm build:go-ffi && forge test && pnpm test:hardhat",
+    "test:hardhat": "../../scripts/agents-devnet/hardhat-test.sh",
+    "deploy:agents": "pnpm exec hardhat run scripts/deployAgents.ts",
     "test:kontrol": "./test/kontrol/scripts/run-kontrol.sh script",
     "genesis": "forge script scripts/L2Genesis.s.sol:L2Genesis --sig 'runWithStateDump()'",
     "coverage": "pnpm build:go-ffi && (forge coverage || (bash -c \"forge coverage 2>&1 | grep -q 'Stack too deep' && echo -e '\\033[1;33mWARNING\\033[0m: Coverage failed with stack too deep, so overriding and exiting successfully' && exit 0 || exit 1\"))",
@@ -45,8 +47,12 @@
     "lint": "pnpm lint:fix && pnpm lint:check"
   },
   "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "hardhat": "^2.22.7",
+    "ethers": "^5.7.2",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "typescript": "^5.4.5"
   }

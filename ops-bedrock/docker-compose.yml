@@ -235,3 +235,23 @@ services:
       - "${PWD}/../.devnet/:/usr/share/nginx/html/:ro"
     security_opt:
       - "no-new-privileges:true"
+
+  nexis-contracts:
+    image: node:20
+    depends_on:
+      - l2
+    working_dir: /workspace
+    volumes:
+      - "../:/workspace"
+    environment:
+      HARDHAT_NETWORK: agentsL3
+      AGENTS_L3_RPC_URL: http://l2:8545
+      AGENTS_STATE_DIR: /workspace/.agents-devnet
+    entrypoint:
+      - "/bin/bash"
+      - "-lc"
+      - |
+        sleep 10 && \
+        corepack enable && \
+        pnpm install --frozen-lockfile && \
+        pnpm --filter @eth-optimism/contracts-bedrock run deploy:agents --network agentsL3

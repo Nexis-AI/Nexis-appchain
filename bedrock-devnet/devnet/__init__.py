@@ -19,6 +19,18 @@ import devnet.log_setup
 
 pjoin = os.path.join
 
+
+def resolve_env_path(key: str, default: str, base: str) -> str:
+    """Return an absolute path using an environment override when provided."""
+    override = os.getenv(key)
+    if not override:
+        return default
+
+    if os.path.isabs(override):
+        return override
+
+    return os.path.abspath(os.path.join(base, override))
+
 parser = argparse.ArgumentParser(description='Bedrock devnet launcher')
 parser.add_argument('--monorepo-dir', help='Directory of the monorepo', default=os.getcwd())
 parser.add_argument('--allocs', help='Only create the allocs and exit', type=bool, action=argparse.BooleanOptionalAction)
@@ -60,15 +72,15 @@ def main():
     args = parser.parse_args()
 
     monorepo_dir = os.path.abspath(args.monorepo_dir)
-    devnet_dir = pjoin(monorepo_dir, '.devnet')
+    devnet_dir = resolve_env_path('DEVNET_OUT_DIR', pjoin(monorepo_dir, '.devnet'), monorepo_dir)
     contracts_bedrock_dir = pjoin(monorepo_dir, 'packages', 'contracts-bedrock')
-    deployment_dir = pjoin(contracts_bedrock_dir, 'deployments', 'devnetL1')
+    deployment_dir = resolve_env_path('DEVNET_DEPLOYMENT_DIR', pjoin(contracts_bedrock_dir, 'deployments', 'devnetL1'), monorepo_dir)
     forge_l1_dump_path = pjoin(contracts_bedrock_dir, 'state-dump-900.json')
     op_node_dir = pjoin(args.monorepo_dir, 'op-node')
     ops_bedrock_dir = pjoin(monorepo_dir, 'ops-bedrock')
     deploy_config_dir = pjoin(contracts_bedrock_dir, 'deploy-config')
-    devnet_config_path = pjoin(deploy_config_dir, 'devnetL1.json')
-    devnet_config_template_path = pjoin(deploy_config_dir, 'devnetL1-template.json')
+    devnet_config_path = resolve_env_path('DEVNET_CONFIG_PATH', pjoin(deploy_config_dir, 'devnetL1.json'), monorepo_dir)
+    devnet_config_template_path = resolve_env_path('DEVNET_CONFIG_TEMPLATE', pjoin(deploy_config_dir, 'devnetL1-template.json'), monorepo_dir)
     ops_chain_ops = pjoin(monorepo_dir, 'op-chain-ops')
     sdk_dir = pjoin(monorepo_dir, 'packages', 'sdk')
 
@@ -100,6 +112,7 @@ def main():
       return
 
     os.makedirs(devnet_dir, exist_ok=True)
+    os.makedirs(deployment_dir, exist_ok=True)
 
     if args.allocs:
         devnet_l1_allocs(paths)

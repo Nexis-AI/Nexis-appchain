@@ -5,14 +5,7 @@
   "affected": {
     "defaultBase": "develop"
   },
-  "implicitDependencies": {
-    "nx.json": "*",
-    "tsconfig.json": "*",
-    ".foundryrc": "*",
-    "pnpm.lock.yaml": "*",
-    ".npmrc": "*",
-    ".nvmrc": "*"
-  },
+  "useDaemonProcess": false,
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx-cloud",
@@ -31,7 +24,12 @@
   "namedInputs": {
     "configsWorkspace": [
       "{workspaceRoot}/package.json",
-      "{workspaceRoot}/tsconfig.json"
+      "{workspaceRoot}/tsconfig.json",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/pnpm-lock.yaml",
+      "{workspaceRoot}/.pnpmrc",
+      "{workspaceRoot}/.nvmrc",
+      "{workspaceRoot}/.foundryrc"
     ],
     "configsProject": [
       "{projectRoot}/foundry.toml",

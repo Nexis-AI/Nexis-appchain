@@ -1,0 +1,59 @@
+{
+  "contracts/forge-std": {
+    "tag": {
+      "name": "v1.10.0",
+      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
+    }
+  },
+  "contracts/openzeppelin-contracts": {
+    "tag": {
+      "name": "v5.4.0",
+      "rev": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+    }
+  },
+  "contracts/openzeppelin-contracts-upgradeable": {
+    "tag": {
+      "name": "v5.4.0",
+      "rev": "e725abddf1e01cf05ace496e950fc8e243cc7cab"
+    }
+  },
+  "contracts/safe-contracts": {
+    "tag": {
+      "name": "v1.5.0",
+      "rev": "dc437e8fba8b4805d76bcbd1c668c9fd3d1e83be"
+    }
+  },
+  "contracts/solady": {
+    "tag": {
+      "name": "v0.1.26",
+      "rev": "acd959aa4bd04720d640bf4e6a5c71037510cc4b"
+    }
+  },
+  "contracts/solmate": {
+    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
+  },
+  "lib/forge-std": {
+    "rev": "2d8b7b876a5b328d6a73e13c4740ed7a0d72d5f4"
+  },
+  "lib/kontrol-cheatcodes": {
+    "rev": "2c48ae1ab44228c199dca29414c0b4b18a3434e6"
+  },
+  "lib/lib-keccak": {
+    "rev": "0115edbbc60b5f702392caafc3a142061e6142fa"
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "ecd2ca2cd7cac116f7a37d0e474bbb3d7d5e1c4d"
+  },
+  "lib/openzeppelin-contracts-upgradeable": {
+    "rev": "0a2cb9a445c365870ed7a8ab461b12acf3e27d63"
+  },
+  "lib/safe-contracts": {
+    "rev": "186a21a74b327f17fc41217a927dea7064f74604"
+  },
+  "lib/solady": {
+    "rev": "502cc1ea718e6fa73b380635ee0868b0740595f0"
+  },
+  "lib/solmate": {
+    "rev": "8f9b23f8838670afda0fd8983f2c41e8037ae6bc"
+  }
+}
