@@ -87,7 +87,7 @@ Key parameters for the Nexis Base L3 devnet (see `deploy-config/AgentsL3.json`):
 | Sequencer Drift | `600` seconds |
 | Channel Timeout | `300` seconds |
 | Finalization Period | `12` seconds |
-| Governance Token | Symbol `NAI`, name `Nexis Agents Infrastructure` |
+| Governance Token | Symbol `NZT`, name `Nexis` |
 | Fault Proofs | Enabled with max depth `73`, max clock `600` seconds |
 | Devnet RPC | `http://127.0.0.1:9545` |
 | Deployment Scripts | `pnpm --filter @eth-optimism/contracts-bedrock run deploy:agents --network agentsL3` |
