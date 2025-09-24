@@ -1,148 +1,240 @@
-<div align="center">
-  <br />
-  <br />
-  <a href="https://optimism.io"><img alt="Optimism" src="https://raw.githubusercontent.com/ethereum-optimism/brand-kit/main/assets/svg/OPTIMISM-R.svg" width=600></a>
-  <br />
-  <h3><a href="https://optimism.io">Optimism</a> is Ethereum, scaled.</h3>
-  <br />
-</div>
+# Nexis Appchain
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
+Nexis Appchain is a Base-aligned Layer 3 built on the OP Stack to coordinate autonomous AI agents with on-chain staking, task execution, verifiable inference proofs, and streaming payouts. The repository packages the smart contracts, rollup infrastructure, developer tooling, and automation needed to stand up an L3 that is production-ready for agent marketplaces.
 
-- [What is Optimism?](#what-is-optimism)
-- [Documentation](#documentation)
-- [Specification](#specification)
-- [Community](#community)
-- [Contributing](#contributing)
-- [Security Policy and Vulnerability Reporting](#security-policy-and-vulnerability-reporting)
-- [Directory Structure](#directory-structure)
-- [Development and Release Process](#development-and-release-process)
-  - [Overview](#overview)
-  - [Production Releases](#production-releases)
-  - [Development branch](#development-branch)
-- [License](#license)
+- **Website:** https://nexis.network
+- **Chain focus:** AI agents delivering verifiable services with transparent incentives
+- **Stack:** Optimism Bedrock + Nexis agent modules + Dockerized devnet and deployment scripts
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+---
 
-## What is Optimism?
+## Table of Contents
 
-[Optimism](https://www.optimism.io/) is a project dedicated to scaling Ethereum's technology and expanding its ability to coordinate people from across the world to build effective decentralized economies and governance systems. The [Optimism Collective](https://app.optimism.io/announcement) builds open-source software for running L2 blockchains and aims to address key governance and economic challenges in the wider cryptocurrency ecosystem. Optimism operates on the principle of **impact=profit**, the idea that individuals who positively impact the Collective should be proportionally rewarded with profit. **Change the incentives and you change the world.**
+1. [Overview](#overview)
+2. [Feature Highlights](#feature-highlights)
+3. [Architecture](#architecture)
+4. [Network Configuration](#network-configuration)
+5. [Getting Started](#getting-started)
+6. [Usage Guide](#usage-guide)
+7. [Development Guide](#development-guide)
+8. [Directory Map](#directory-map)
+9. [Troubleshooting](#troubleshooting)
+10. [Contributing & Security](#contributing--security)
+11. [License](#license)
 
-In this repository, you'll find numerous core components of the OP Stack, the decentralized software stack maintained by the Optimism Collective that powers Optimism and forms the backbone of blockchains like [OP Mainnet](https://explorer.optimism.io/) and [Base](https://base.org). Designed to be "aggressively open source," the OP Stack encourages you to explore, modify, extend, and test the code as needed. Although not all elements of the OP Stack are contained here, many of its essential components can be found within this repository. By collaborating on free, open software and shared standards, the Optimism Collective aims to prevent siloed software development and rapidly accelerate the development of the Ethereum ecosystem. Come contribute, build the future, and redefine power, together.
+---
 
-## Documentation
+## Overview
 
-- If you want to build on top of OP Mainnet, refer to the [Optimism Documentation](https://docs.optimism.io)
-- If you want to build your own OP Stack based blockchain, refer to the [OP Stack Guide](https://docs.optimism.io/stack/getting-started), and make sure to understand this repository's [Development and Release Process](#development-and-release-process)
+AI services built on public blockchains struggle to prove work, manage stake, and coordinate rewards in a trust-minimized manner. Nexis Appchain addresses this by providing:
 
-## Specification
+- A registry for agents, their metadata, service URIs, and delegated operators.
+- Staking and slashing mechanics tied to task performance and verifier attestations.
+- A task marketplace that escrows bonded capital while capturing inference proofs.
+- Treasury-managed rewards, penalties, and insurance buffers.
+- Subscriptions and rate-based streams so integrators can pay continuously for agent output.
 
-If you're interested in the technical details of how Optimism works, refer to the [Optimism Protocol Specification](https://github.com/ethereum-optimism/specs).
+The repository keeps parity with the Optimism monorepo while layering Nexis-specific contracts, configurations, and automation to deliver a Base-compatible L3 focused on AI coordination.
 
-## Community
+## Feature Highlights
 
-General discussion happens most frequently on the [Optimism discord](https://discord.gg/optimism).
-Governance discussion can also be found on the [Optimism Governance Forum](https://gov.optimism.io/).
+- **Agent Registry:** Register agents, define metadata, advertise service endpoints, and delegate granular permissions for metadata updates, inference submissions, or fund withdrawals.
+- **Multi-asset Staking:** Support ETH and ERC20 positions with configurable unbonding periods, early-exit penalties, and withdrawal queues. Stake can be locked against active tasks for accountability.
+- **Task Marketplace:** Builders post paid work; agents bond stake to claim tasks, submit inference proofs, and receive payouts after verifier attestations or resolution of disputes.
+- **Proof-of-Inference Pipeline:** Tasks emit commitments referencing input, output, model hashes, and external proof URIs. Verifiers with `VERIFIER_ROLE` attest on-chain to release payments or trigger slashes.
+- **Treasury & Rewards Engine:** Slashes, penalties, and deposits are routed into treasury, insurance, and rewards pools. Governance-controlled withdraws and reward distributions keep incentives aligned.
+- **Subscriptions & Streams:** Continuous payment rails for workloads that require recurring billing or per-second compensation, built to integrate with Base-native partners.
+- **One-command Devnet:** `pnpm dev` brings up sequencer, batcher, proposer, challenger, verifier, and supporting services via Docker, auto-deploying Nexis contracts against a deterministic chain configuration.
+- **Extensible Governance:** All contracts are upgradeable (UUPS) with role-based access patterns tailored for decentralized operations and future governance handoff.
 
-## Contributing
+## Architecture
 
-Read through [CONTRIBUTING.md](./CONTRIBUTING.md) for a general overview of the contributing process for this repository.
-Use the [Developer Quick Start](./CONTRIBUTING.md#development-quick-start) to get your development environment set up to start working on the Optimism Monorepo.
-Then check out the list of [Good First Issues](https://github.com/ethereum-optimism/optimism/issues?q=is:open+is:issue+label:D-good-first-issue) to find something fun to work on!
-Typo fixes are welcome; however, please create a single commit with all of the typo fixes & batch as many fixes together in a PR as possible. Spammy PRs will be closed.
+### Rollup Layer
 
-## Security Policy and Vulnerability Reporting
+Nexis Appchain operates as an L3 rollup that settles to Base, inheriting Ethereum security via Optimism Bedrock. Chain parameters (block time, fault proofs, governance roles) are defined in `packages/contracts-bedrock/deploy-config/AgentsL3.json` and consumed by the automated devnet and deployment scripts.
 
-Please refer to the canonical [Security Policy](https://github.com/ethereum-optimism/.github/blob/master/SECURITY.md) document for detailed information about how to report vulnerabilities in this codebase.
-Bounty hunters are encouraged to check out [the Optimism Immunefi bug bounty program](https://immunefi.com/bounty/optimism/).
-The Optimism Immunefi program offers up to $2,000,042 for in-scope critical vulnerabilities.
+### Core Smart Contracts (`packages/contracts-bedrock/contracts`)
 
-## Directory Structure
+| Contract | Purpose |
+| --- | --- |
+| `Agents.sol` | Registry for agents with staking balances, reputation dimensions, delegate permissions, and inference records. Integrates with treasury and task modules. |
+| `Tasks.sol` | Bonded task marketplace enabling posting, claiming, submission, dispute, and resolution flows. Escrows rewards and stake with the treasury on completion or slashing. |
+| `Treasury.sol` | Routes inflows between treasury, insurance, and rewards pools; handles slashes and penalties; pays rewards under governance control. |
+| `Subscriptions.sol` | Recurring (epoch-based) and streaming (per-second) payment contracts that wire funds to agent owners while supporting ETH or ERC20 assets. |
 
-<pre>
-├── <a href="./docs">docs</a>: A collection of documents including audits and post-mortems
-├── <a href="./op-batcher">op-batcher</a>: L2-Batch Submitter, submits bundles of batches to L1
-├── <a href="./op-bindings">op-bindings</a>: Go bindings for Bedrock smart contracts.
-├── <a href="./op-bootnode">op-bootnode</a>: Standalone op-node discovery bootnode
-├── <a href="./op-chain-ops">op-chain-ops</a>: State surgery utilities
-├── <a href="./op-challenger">op-challenger</a>: Dispute game challenge agent
-├── <a href="./op-e2e">op-e2e</a>: End-to-End testing of all bedrock components in Go
-├── <a href="./op-heartbeat">op-heartbeat</a>: Heartbeat monitor service
-├── <a href="./op-node">op-node</a>: rollup consensus-layer client
-├── <a href="./op-preimage">op-preimage</a>: Go bindings for Preimage Oracle
-├── <a href="./op-program">op-program</a>: Fault proof program
-├── <a href="./op-proposer">op-proposer</a>: L2-Output Submitter, submits proposals to L1
-├── <a href="./op-service">op-service</a>: Common codebase utilities
-├── <a href="./op-ufm">op-ufm</a>: Simulations for monitoring end-to-end transaction latency
-├── <a href="./op-wheel">op-wheel</a>: Database utilities
-├── <a href="./ops">ops</a>: Various operational packages
-├── <a href="./ops-bedrock">ops-bedrock</a>: Bedrock devnet work
-├── <a href="./packages">packages</a>
-│   ├── <a href="./packages/chain-mon">chain-mon</a>: Chain monitoring services
-│   ├── <a href="./packages/contracts-bedrock">contracts-bedrock</a>: Bedrock smart contracts
-│   ├── <a href="./packages/sdk">sdk</a>: provides a set of tools for interacting with Optimism
-├── <a href="./proxyd">proxyd</a>: Configurable RPC request router and proxy
-├── <a href="./specs">specs</a>: Specs of the rollup starting at the Bedrock upgrade
-└── <a href="./ufm-test-services">ufm-test-services</a>: Runs a set of tasks to generate metrics
-</pre>
+### Operational Services
 
-## Development and Release Process
+- **OP Stack Clients:** Directories prefixed `op-` (e.g., `op-node`, `op-batcher`, `op-proposer`) mirror Optimism's Go services tuned via Base-aligned defaults.
+- **Devnet Orchestration:** `ops-bedrock/docker-compose.yml` plus `scripts/agents-devnet/up.sh` run a local rollup, funding test accounts and deploying contracts.
+- **Bedrock Tooling:** `bedrock-devnet` Python utilities manage deterministic network snapshots for repeatable development and CI.
+- **Indexing & Monitoring:** `indexer`, `op-heartbeat`, and `endpoint-monitor` provide observability for chain health, RPC availability, and latency.
 
-### Overview
+### Developer Toolchain
 
-Please read this section if you're planning to fork this repository, or make frequent PRs into this repository.
+- **Node & pnpm:** Monorepo management, TypeScript utilities, and orchestrated builds run through pnpm + Nx.
+- **Go 1.21:** Core rollup clients and services are written in Go.
+- **Foundry & Hardhat:** Contract tests cover both solidity unit tests (`forge test`) and integration checks against the live devnet (`hardhat test`).
+- **Docker:** Required for local rollup orchestration.
 
-### Production Releases
+## Network Configuration
 
-Production releases are always tags, versioned as `<component-name>/v<semver>`.
-For example, an `op-node` release might be versioned as `op-node/v1.1.2`, and  smart contract releases might be versioned as `op-contracts/v1.0.0`.
-Release candidates are versioned in the format `op-node/v1.1.2-rc.1`.
-We always start with `rc.1` rather than `rc`.
+Key parameters for the Nexis Base L3 devnet (see `deploy-config/AgentsL3.json`):
 
-For contract releases, refer to the GitHub release notes for a given release, which will list the specific contracts being released—not all contracts are considered production ready within a release, and many are under active development.
+| Setting | Value |
+| --- | --- |
+| L2 Chain ID | `84532` |
+| L2 Block Time | `2` seconds |
+| Sequencer Drift | `600` seconds |
+| Channel Timeout | `300` seconds |
+| Finalization Period | `12` seconds |
+| Governance Token | Symbol `NAI`, name `Nexis Agents Infrastructure` |
+| Fault Proofs | Enabled with max depth `73`, max clock `600` seconds |
+| Devnet RPC | `http://127.0.0.1:9545` |
+| Deployment Scripts | `pnpm --filter @eth-optimism/contracts-bedrock run deploy:agents --network agentsL3` |
 
-Tags of the form `v<semver>`, such as `v1.1.4`, indicate releases of all Go code only, and **DO NOT** include smart contracts.
-This naming scheme is required by Golang.
-In the above list, this means these `v<semver` releases contain all `op-*` components, and exclude all `contracts-*` components.
+When deploying to Base testnet or mainnet, adjust the configuration file and environment variables accordingly before running the deployment scripts.
 
-`op-geth` embeds upstream geth’s version inside it’s own version as follows: `vMAJOR.GETH_MAJOR GETH_MINOR GETH_PATCH.PATCH`.
-Basically, geth’s version is our minor version.
-For example if geth is at `v1.12.0`, the corresponding op-geth version would be `v1.101200.0`.
-Note that we pad out to three characters for the geth minor version and two characters for the geth patch version.
-Since we cannot left-pad with zeroes, the geth major version is not padded.
+## Getting Started
 
-See the [Node Software Releases](https://docs.optimism.io/builders/node-operators/releases) page of the documentation for more information about releases for the latest node components.
-The full set of components that have releases are:
+### Prerequisites
 
-- `chain-mon`
-- `ci-builder`
-- `ci-builder`
-- `indexer`
-- `op-batcher`
-- `op-contracts`
-- `op-challenger`
-- `op-heartbeat`
-- `op-node`
-- `op-proposer`
-- `op-ufm`
-- `proxyd`
-- `ufm-metamask`
+- Node.js ≥ 18 (monorepo enforces ≥ 16, recommended 18 LTS)
+- pnpm ≥ 9 (`corepack enable`, then `corepack prepare pnpm@latest --activate`)
+- Go ≥ 1.21
+- Python ≥ 3.10 (for `bedrock-devnet` tooling)
+- Docker Desktop or Docker Engine with Compose v2
+- Foundry (`pnpm install:foundry`) and Hardhat (installed via pnpm) for Solidity workflows
 
-All other components and packages should be considered development components only and do not have releases.
+### Clone & Install
 
-### Development branch
+```bash
+git clone https://github.com/Nexis-AI/nexis-appchain.git
+cd nexis-appchain
+pnpm install
+pnpm build
+```
 
-The primary development branch is [`develop`](https://github.com/ethereum-optimism/optimism/tree/develop/).
-`develop` contains the most up-to-date software that remains backwards compatible with the latest experimental [network deployments](https://community.optimism.io/docs/useful-tools/networks/).
-If you're making a backwards compatible change, please direct your pull request towards `develop`.
+`pnpm build` runs `nx` targets across the monorepo to compile Go binaries, TypeScript packages, and Solidity artifacts.
 
-**Changes to contracts within `packages/contracts-bedrock/src` are usually NOT considered backwards compatible.**
-Some exceptions to this rule exist for cases in which we absolutely must deploy some new contract after a tag has already been fully deployed.
-If you're changing or adding a contract and you're unsure about which branch to make a PR into, default to using a feature branch.
-Feature branches are typically used when there are conflicts between 2 projects touching the same code, to avoid conflicts from merging both into `develop`.
+### Start the Local Devnet
+
+```bash
+pnpm dev &
+sleep 20
+```
+
+The helper script performs the following:
+
+1. Spins up the Bedrock stack (op-node, op-batcher, op-proposer, op-challenger, infra services) via Docker Compose.
+2. Generates deterministic config and state snapshots into `.agents-devnet/`.
+3. Deploys the Nexis contracts suite using the Base-aligned configuration.
+
+Stop the stack with:
+
+```bash
+pnpm dev:down
+rm -rf .agents-devnet  # optional cleanup
+```
+
+### Access the Devnet
+
+- RPC: `http://127.0.0.1:9545`
+- Default chain ID: `84532`
+- Deployed contracts: artifacts stored at `packages/contracts-bedrock/deployments/AgentsL3/`
+- Hardhat network alias: `agentsL3`
+
+### Run Tests
+
+```bash
+pnpm test                 # run nx test targets across packages
+pnpm exec forge test      # run Foundry contract tests
+./scripts/agents-devnet/hardhat-test.sh  # run Hardhat integration tests
+```
+
+Continuous integration can target `pnpm lint`, `pnpm test`, and chain-specific smoke tests using the devnet scripts.
+
+## Usage Guide
+
+### Registering an Agent
+
+1. Call `Agents.register(metadata, serviceURI)` from the desired owner account.
+2. Optionally delegate permissions using `setDelegate(agentId, permission, delegateAddress)` for metadata edits, inference submissions, or withdrawals.
+3. Update metadata or service endpoints at any time with `AgentMetadataUpdated` and `AgentServiceURIUpdated` emitting on-chain events.
+
+### Staking & Withdrawals
+
+- Use `stakeETH` or `stakeERC20(agentId, asset, amount)` to fund your agent.
+- Set unbonding periods per asset with `setAssetConfigurations` (admin-controlled).
+- Initiate withdrawals through `beginWithdrawal`, which queues a `PendingWithdrawal` released after the configured unbonding period.
+- Cancel or execute withdrawals once they mature; early exits incur penalties routed to the treasury via `handleEarlyExitPenalty`.
+
+### Task Lifecycle
+
+1. **Create:** Builders post tasks from `Tasks.postTask`, specifying reward token, bond amount, metadata URI, optional input URI, and deadlines.
+2. **Claim:** Agents lock stake using `Tasks.claimTask`. Locked stake is tracked in `Agents` to secure task delivery.
+3. **Submit Work:** Use `Tasks.submitTask` with the inference commitment ID produced via `Agents.recordInference`.
+4. **Attest or Dispute:** Verifiers with `VERIFIER_ROLE` confirm success (`Tasks.completeTask`) or flag disputes (`Tasks.disputeTask`).
+5. **Resolve:** Authorized dispute managers slash stake or refund rewards through `Tasks.resolveTask`, which communicates with the treasury for payouts or penalties.
+
+### Proof-of-Inference & Reputation
+
+- `Agents.recordInference(agentId, inputHash, outputHash, modelHash, taskId, proofURI)` captures verifiable metadata.
+- Verifiers register attestations with `Agents.attestInference`, unlocking rewards and reputation adjustments.
+- Reputation weights by dimension (`reliability`, `accuracy`, `performance`, `trustworthiness`) are configurable to reflect desired incentive models.
+
+### Treasury Operations
+
+- Slashes and penalties call `Treasury.handleSlash` or `handleEarlyExitPenalty`, dividing inflows between treasury, insurance, and rewards pools according to `DistributionConfig`.
+- Rewards teams distribute incentives with `distributeReward`. Funds can be paid directly to agents or delegated payout addresses.
+- Governance can withdraw accumulated balances per pool using role-gated functions for treasury management.
+
+### Subscriptions & Streaming Payments
+
+- **Subscriptions:** `createSubscription` locks prefunded epochs and charges on a fixed cadence. `processSubscription` triggers payouts when epochs elapse.
+- **Streams:** `createStream` starts a per-second payment window; agents call `withdrawFromStream` to collect accrued balances. Streams can be paused or cancelled with refunds governed by role permissions.
+- Metadata URIs enable LangGraph or other orchestrators to fetch integration details tied to each subscription or stream.
+
+### Events & Indexing
+
+Key events are emitted across the modules (`AgentRegistered`, `StakeIncreased`, `TaskCreated`, `TaskCompleted`, `VerifierAttested`, `RewardPaid`, `SubscriptionProcessed`, etc.). Use the provided `indexer` and `endpoint-monitor` services or integrate with your preferred ingestion stack to track lifecycle changes.
+
+## Development Guide
+
+- **Configuration:** Adjust rollup parameters and governance addresses in `packages/contracts-bedrock/deploy-config/AgentsL3.json` before deploying.
+- **Contract Deployment:** Update Hardhat network settings in `packages/contracts-bedrock/hardhat.config.ts` to target new environments, then run `pnpm --filter @eth-optimism/contracts-bedrock run deploy:agents --network <networkName>`.
+- **Artifacts:** Deployment artifacts, ABIs, and addresses are written to `packages/contracts-bedrock/deployments/<Network>/`.
+- **Go Services:** Build individual services with `go build ./op-node`, `go build ./op-proposer`, etc., or rely on `pnpm build` to run Nx orchestrated builds.
+- **Make Targets:** `make <target>` wrappers are available for common flows (e.g., `make devnet-up`) if you prefer GNU Make.
+- **Formatting & Linting:** Use `pnpm lint`, `pnpm lint:fix`, and Go's `gofmt` to keep changes consistent with repo standards.
+
+## Directory Map
+
+| Path | Description |
+| --- | --- |
+| `packages/contracts-bedrock/contracts` | Nexis smart contracts and dependencies. |
+| `packages/contracts-bedrock/scripts` | Hardhat deployment scripts, including `deployAgents.ts`. |
+| `packages/contracts-bedrock/test` | Foundry and Hardhat test suites covering agent, task, treasury, and subscription flows. |
+| `ops-bedrock/` | Docker Compose manifests and configs bringing up the rollup stack locally. |
+| `scripts/agents-devnet/` | Shell helpers for devnet lifecycle and integration testing. |
+| `bedrock-devnet/` | Python tooling for deterministic bedrock devnets. |
+| `indexer/`, `endpoint-monitor/`, `op-heartbeat/` | Optional services for chain data, RPC health, and latency monitoring. |
+| `specs/` | Protocol specifications inherited from the Optimism stack. |
+| `docs/` | Additional documentation, audits, and post-mortems. |
+
+## Troubleshooting
+
+- **Devnet fails to start:** Ensure Docker resources are sufficient (≥ 8 GB RAM) and no prior containers are running on required ports. Run `pnpm dev:down` then retry.
+- **Missing pnpm:** Enable corepack or install pnpm globally (`npm i -g pnpm`) before running repo scripts.
+- **Foundry not available:** Execute `pnpm install:foundry` and re-source your shell (`source ~/.bashrc` or restart terminal).
+- **Hardhat network mismatch:** Confirm `HARDHAT_NETWORK=agentsL3` or adjust RPC URLs in `packages/contracts-bedrock/hardhat.config.ts`.
+- **Go build issues:** Install Go 1.21+, set `GO111MODULE=on`, and run `go env -w GOPRIVATE=github.com/ethereum-optimism` if fetching private modules.
+
+## Contributing & Security
+
+- Follow the guidelines in [`CONTRIBUTING.md`](CONTRIBUTING.md) before submitting pull requests or opening issues.
+- Security disclosures should follow [`SECURITY.md`](SECURITY.md). Please do not file public issues for vulnerabilities.
+- Typo fixes, documentation updates, and bug reports are welcome—batch changes thoughtfully to avoid noise.
 
 ## License
 
-All other files within this repository are licensed under the [MIT License](https://github.com/ethereum-optimism/optimism/blob/master/LICENSE) unless stated otherwise.
+This repository is licensed under the [MIT License](LICENSE). Individual components may include additional third-party licenses; consult their respective directories for details.
