@@ -23,3 +23,27 @@
 [submodule "packages/contracts-bedrock/lib/lib-keccak"]
 	path = packages/contracts-bedrock/lib/lib-keccak
 	url = https://github.com/ethereum-optimism/lib-keccak
+[submodule "packages/contracts-bedrock/contracts/openzeppelin-contracts"]
+	path = packages/contracts-bedrock/contracts/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/contracts-bedrock/contracts/forge-std"]
+	path = packages/contracts-bedrock/contracts/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "packages/contracts-bedrock/contracts/solmate"]
+	path = packages/contracts-bedrock/contracts/solmate
+	url = https://github.com/rari-capital/solmate
+[submodule "packages/contracts-bedrock/contracts/solady"]
+	path = packages/contracts-bedrock/contracts/solady
+	url = https://github.com/vectorized/solady
+[submodule "packages/contracts-bedrock/contracts/openzeppelin-contracts-upgradeable"]
+	path = packages/contracts-bedrock/contracts/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+[submodule "packages/contracts-bedrock/contracts/safe-contracts"]
+	path = packages/contracts-bedrock/contracts/safe-contracts
+	url = https://github.com/safe-global/safe-contracts
+[submodule "packages/contracts-bedrock/vendor/openzeppelin-contracts-upgradeable"]
+	path = packages/contracts-bedrock/vendor/openzeppelin-contracts-upgradeable
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable.git
+[submodule "packages/contracts-bedrock/vendor/openzeppelin-contracts"]
+	path = packages/contracts-bedrock/vendor/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git

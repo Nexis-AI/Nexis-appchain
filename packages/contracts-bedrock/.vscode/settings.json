@@ -1,0 +1,16 @@
+{
+  "solidity.packageDefaultDependenciesContractsDirectory": "contracts",
+  "solidity.packageDefaultDependenciesDirectory": "lib",
+  "solidity.remappings": [
+    "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts",
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts",
+    "@rari-capital/solmate/=lib/solmate",
+    "@lib-keccak/=lib/lib-keccak/contracts/lib",
+    "@solady/=lib/solady/src",
+    "forge-std/=lib/forge-std/src",
+    "ds-test/=lib/forge-std/lib/ds-test/src",
+    "safe-contracts/=lib/safe-contracts/contracts",
+    "kontrol-cheatcodes/=lib/kontrol-cheatcodes/src",
+    "contracts/=contracts/"
+  ]
+}

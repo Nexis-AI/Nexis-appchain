@@ -6,6 +6,7 @@
   "include": [
     "deploy-config/**/*",
     "deploy-config/**/*.json",
-    "scripts/**/*"
+    "scripts/**/*",
+    "test/hardhat/**/*"
   ]
 }
