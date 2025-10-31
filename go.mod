@@ -15,7 +15,7 @@ require (
 	github.com/ethereum-optimism/go-ethereum-hdwallet v0.1.3
 	github.com/ethereum-optimism/superchain-registry/superchain v0.0.0-20240522134500-19555bdbdc95
 	github.com/ethereum/go-ethereum v1.13.15
-	github.com/fsnotify/fsnotify v1.7.0
+	github.com/fsnotify/fsnotify v1.9.0
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-chi/docgen v1.2.0
 	github.com/golang/snappy v0.0.5-0.20220116011046-fa5810519dcb
