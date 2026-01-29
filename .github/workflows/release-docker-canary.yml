@@ -62,7 +62,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -89,7 +89,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -116,7 +116,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -143,7 +143,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -170,7 +170,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -197,7 +197,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN_SECRET }}
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ops/docker/Dockerfile.packages
@@ -232,7 +232,7 @@ jobs:
           echo ::set-output name=GITCOMMIT::"$GITHUB_SHA"
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./endpoint-monitor/Dockerfile
