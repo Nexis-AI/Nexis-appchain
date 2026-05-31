@@ -1,40 +1,72 @@
-import { expect } from 'chai'
 import { ethers } from 'hardhat'
+import { expect } from 'chai'
 
-async function deployProxy(contractName: string, args: unknown[], signer: any) {
+const deployProxy = async (
+  contractName: string,
+  args: unknown[],
+  signer: any
+) => {
   const implFactory = await ethers.getContractFactory(contractName, signer)
   const implementation = await implFactory.deploy()
   await implementation.waitForDeployment()
   const initData = implFactory.interface.encodeFunctionData('initialize', args)
   const proxyFactory = await ethers.getContractFactory('ERC1967Proxy', signer)
-  const proxy = await proxyFactory.deploy(await implementation.getAddress(), initData)
+  const proxy = await proxyFactory.deploy(
+    await implementation.getAddress(),
+    initData
+  )
   await proxy.waitForDeployment()
   const instance = implFactory.attach(await proxy.getAddress())
   return { implementation, proxy, instance }
 }
 
 describe('Nexis Agents stack', () => {
-  async function deployStack() {
+  const deployStack = async () => {
     const [admin] = await ethers.getSigners()
 
-    const treasuryDeployment = await deployProxy('Treasury', [admin.address, admin.address], admin)
+    const treasuryDeployment = await deployProxy(
+      'Treasury',
+      [admin.address, admin.address],
+      admin
+    )
     const treasury = treasuryDeployment.instance
 
-    const agentsDeployment = await deployProxy('Agents', [admin.address, await treasury.getAddress()], admin)
+    const agentsDeployment = await deployProxy(
+      'Agents',
+      [admin.address, await treasury.getAddress()],
+      admin
+    )
     const agents = agentsDeployment.instance
 
     await treasury.setAgents(await agents.getAddress())
-    await treasury.grantRole(await treasury.INFLOW_ROLE(), await agents.getAddress())
+    await treasury.grantRole(
+      await treasury.INFLOW_ROLE(),
+      await agents.getAddress()
+    )
 
-    const tasksDeployment = await deployProxy('Tasks', [admin.address, await agents.getAddress(), await treasury.getAddress()], admin)
+    const tasksDeployment = await deployProxy(
+      'Tasks',
+      [admin.address, await agents.getAddress(), await treasury.getAddress()],
+      admin
+    )
     const tasks = tasksDeployment.instance
 
-    const subscriptionsDeployment = await deployProxy('Subscriptions', [admin.address, await agents.getAddress()], admin)
+    const subscriptionsDeployment = await deployProxy(
+      'Subscriptions',
+      [admin.address, await agents.getAddress()],
+      admin
+    )
     const subscriptions = subscriptionsDeployment.instance
 
     await agents.setTasksContract(await tasks.getAddress())
-    await agents.grantRole(await agents.TASK_MODULE_ROLE(), await tasks.getAddress())
-    await agents.grantRole(await agents.SLASHER_ROLE(), await tasks.getAddress())
+    await agents.grantRole(
+      await agents.TASK_MODULE_ROLE(),
+      await tasks.getAddress()
+    )
+    await agents.grantRole(
+      await agents.SLASHER_ROLE(),
+      await tasks.getAddress()
+    )
     await agents.grantRole(await agents.VERIFIER_ROLE(), admin.address)
     await agents.setEarlyExitPenalty(ethers.ZeroAddress, 500)
 
@@ -43,7 +75,11 @@ describe('Nexis Agents stack', () => {
 
   it('registers agents via proxy and exposes discovery metadata', async () => {
     const { agents } = await deployStack()
-    await agents.register(1, 'ipfs://bootstrap.json', 'https://agents.nexis/bootstrap')
+    await agents.register(
+      1,
+      'ipfs://bootstrap.json',
+      'https://agents.nexis/bootstrap'
+    )
 
     const list = await agents.listAgents(0, 10)
     expect(list.length).to.equal(1)
@@ -90,8 +126,19 @@ describe('Nexis Agents stack', () => {
 
     expect(inferenceId, 'inferenceId').to.not.be.undefined
 
-    const deltas = [{ dimension: ethers.keccak256(ethers.toUtf8Bytes('accuracy')), delta: 5, reason: 'verified' }]
-    await agents.attestInference(inferenceId, true, 'ipfs://attestation', deltas)
+    const deltas = [
+      {
+        dimension: ethers.keccak256(ethers.toUtf8Bytes('accuracy')),
+        delta: 5,
+        reason: 'verified',
+      },
+    ]
+    await agents.attestInference(
+      inferenceId,
+      true,
+      'ipfs://attestation',
+      deltas
+    )
 
     const [, attestation] = await agents.getInference(inferenceId)
     expect(attestation.success).to.equal(true)

@@ -1,11 +1,12 @@
+import { existsSync, readFileSync } from 'node:fs'
+import path from 'node:path'
+
 import { HardhatUserConfig, subtask } from 'hardhat/config'
 import '@nomiclabs/hardhat-ethers'
 import {
   TASK_COMPILE_GET_REMAPPINGS,
   TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS,
 } from 'hardhat/builtin-tasks/task-names'
-import { existsSync, readFileSync } from 'node:fs'
-import path from 'node:path'
 
 const EXCLUDED_SOURCE_DIRS = [
   'contracts/forge-std',
@@ -24,8 +25,9 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS, async (args, _, runSuper) => {
 
   return sourcePaths.filter((filePath) => {
     const absolutePath = path.resolve(filePath)
-    return !excludedRoots.some((root) =>
-      absolutePath === root || absolutePath.startsWith(`${root}${path.sep}`)
+    return !excludedRoots.some(
+      (root) =>
+        absolutePath === root || absolutePath.startsWith(`${root}${path.sep}`)
     )
   })
 })
@@ -52,7 +54,9 @@ subtask(TASK_COMPILE_GET_REMAPPINGS, async (_, __, runSuper) => {
       const target = line.slice(separatorIndex + 1).trim()
       return [prefix, target] as const
     })
-    .filter((entry): entry is readonly [string, string] => Boolean(entry[0] && entry[1]))
+    .filter((entry): entry is readonly [string, string] =>
+      Boolean(entry[0] && entry[1])
+    )
 
   if (extraEntries.length === 0) {
     return base

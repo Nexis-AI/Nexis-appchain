@@ -50,6 +50,7 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "chai": "^4.3.10",
     "hardhat": "^2.22.7",
     "ethers": "^5.7.2",
     "ts-node": "^10.9.2",
