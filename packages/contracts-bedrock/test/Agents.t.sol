@@ -172,8 +172,8 @@ contract AgentsIntegrationTest is Test {
 
         agents.attestInference(inferenceId, true, "ipfs://attestation", deltas);
 
-        (Agents.InferenceCommitment memory commitment, Agents.VerifierAttestation memory attestation)
-        = agents.getInference(inferenceId);
+        (Agents.InferenceCommitment memory commitment, Agents.VerifierAttestation memory attestation) =
+            agents.getInference(inferenceId);
         assertEq(commitment.agentId, AGENT_ID);
         assertEq(commitment.modelHash, modelHash);
         assertTrue(attestation.success);
