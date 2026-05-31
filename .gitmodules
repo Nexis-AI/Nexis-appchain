@@ -47,3 +47,6 @@
 [submodule "packages/contracts-bedrock/vendor/openzeppelin-contracts"]
 	path = packages/contracts-bedrock/vendor/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git
+[submodule "packages/contracts-bedrock/vendor/safe-contracts"]
+	path = packages/contracts-bedrock/vendor/safe-contracts
+	url = https://github.com/safe-global/safe-contracts.git
